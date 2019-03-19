@@ -1,0 +1,8 @@
+
+# parsing jsonschema
+jsonschema==2.5.1
+
+#incoming
+incoming
+
+google-cloud-firestore
