@@ -1,33 +1,39 @@
 
 from validator import SensorInfoFormatValidator
-from constants import ATT_TEMP
-from dal import DataAccessLayer
+from constants import ATT_TEMP, ATT_PRESSURE
+from dal import DataAccessLayer, SensorAttrModel
+import time
+
 class SensorInfo(object):
     def __init__(self, request_object):
         self.request = request_object
 
     def transform(self, attr, content):
         try:
-            if attr == ATT_TEMP:
+            if attr in [ATT_TEMP, ATT_PRESSURE]:
                 val = content['d1'] + (content['d2']/100)
                 return val
-            return 0
+            else:
+                return content['d1']
         except Exception as e:
             print("Exception e {}".format(e))
             return 0
 
 
     def process_document(self, document):
-        return DataAccessLayer('thingy52').add(document)
+        return SensorAttrModel('thingy52').add(document)
 
     def handle(self):
         if SensorInfoFormatValidator().validate(self.request):
             print("request validated")
             status, document = self.prepare_document()
             if status is True:
-                return self.process_document(document)
-            return False
-        return False
+                if self.process_document(document):
+                    return f'success'
+                else:
+                    return f'failed'
+            return f'success'
+        return f'failed'
 
     def prepare_document(self):
         try:
@@ -37,7 +43,7 @@ class SensorInfo(object):
             document = {
                 'tp_id': content['tpid'],
                 's_id': content['s_id'],
-                'attr': attr,
+                'attribute': attr,
                 'value': value,
                 'app_id': content['appid'],
                 'timestamp': content['tstamp'],
@@ -47,3 +53,22 @@ class SensorInfo(object):
         except Exception as e:
             print("Exception e {}".format(e))
             return False, None
+
+    def handle_get_request(self, args):
+        try:
+            sensor_id = args['sensor']
+            start, end = self.get_timerange(args)
+            print("start: {}, end: {}, sensor_id: {}, attr {}".format(start, end, sensor_id, args['attr']))
+            return self.get_attr_timeseries(sensor_id, args['attr'], start, end)
+        except Exception as e:
+            print("Exception e {}".format(e))
+            return False, None
+
+    def get_attr_timeseries(self, sensor_id, attr, start, end):
+        docs = SensorAttrModel('thingy52').list_by_sensor(sensor_id, attr, start, end)
+        return docs
+
+    def get_timerange(self, args):
+        end = time.time()
+        start = end - 3600
+        return start, end

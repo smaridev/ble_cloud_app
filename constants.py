@@ -6,3 +6,4 @@ GSupportedUnits = {
 TOPIC_SENSORINFO = 'sensorinfo'
 TOPIC_REGISTRATION = 'registration'
 ATT_TEMP = 'temperature'
+ATT_PRESSURE = 'pressure'
