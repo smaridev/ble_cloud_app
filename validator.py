@@ -120,7 +120,7 @@ class LoadFormatValidator(PayloadValidator):
             return False
         return True
 
-class RegostrationLoadFormatValidator(PayloadValidator):
+class RegistrationLoadFormatValidator(PayloadValidator):
     s_id = EStringIncomingType(required=True, min_len=1)
     appid = EIntegerIncomingType(required=True, min_len=1)
     tstamp = ETimeStampIncomingType(required=True)

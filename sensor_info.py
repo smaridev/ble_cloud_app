@@ -56,16 +56,16 @@ class SensorInfo(object):
 
     def handle_get_request(self, args):
         try:
-            sensor_id = args['sensor']
+            app_id = args['sensor']
             start, end = self.get_timerange(args)
-            print("start: {}, end: {}, sensor_id: {}, attr {}".format(start, end, sensor_id, args['attr']))
-            return self.get_attr_timeseries(sensor_id, args['attr'], start, end)
+            print("start: {}, end: {}, sensor_id: {}, attr {}".format(start, end, app_id, args['attr']))
+            return self.get_attr_timeseries(app_id, args['attr'], start, end)
         except Exception as e:
             print("Exception e {}".format(e))
             return False, None
 
-    def get_attr_timeseries(self, sensor_id, attr, start, end):
-        docs = SensorAttrModel('thingy52').list_by_sensor(sensor_id, attr, start, end)
+    def get_attr_timeseries(self, app_id, attr, start, end):
+        docs = SensorAttrModel('thingy52').list_by_sensor(app_id, attr, start, end)
         return docs
 
     def get_timerange(self, args):

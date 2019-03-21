@@ -9,7 +9,7 @@ class RegistrationInfo(object):
         self.request = request_object
 
     def process_document(self, document):
-        return DataAccessLayer('sensor_details').add_or_update(document, document['s_id'])
+        return DataAccessLayer('sensor_details').add_or_update(document, document['app_id'])
 
     def handle(self):
         if RegistrationFormatValidator().validate(self.request):
