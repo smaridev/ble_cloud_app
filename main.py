@@ -26,7 +26,8 @@ def process_southbound_request(request_object):
 def process_northbound_request(request_object):
     try:
         req = request_object.get_json()
-        args = request_object.get_args()
+        args = request_object.args.to_dict()
+        print("ARGS {}".format(args))
         if request_object.method == 'GET':
             if args['type'] == 'sensorinfo':
                 return RegistrationInfo(req).handle_get_request(args)

@@ -126,6 +126,8 @@ class RegostrationLoadFormatValidator(PayloadValidator):
     tstamp = ETimeStampIncomingType(required=True)
     tpid = EIntegerIncomingType(required=True, min_len=1)
     ver = EIntegerIncomingType(required=True, min_len=1)
+    name = EStringIncomingType(required=True, min_len=1)
+    desc = EStringIncomingType(required=False, min_len=1)
     strict = False
 
 

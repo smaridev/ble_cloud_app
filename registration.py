@@ -32,7 +32,9 @@ class RegistrationInfo(object):
                 'app_id': content['appid'],
                 'timestamp': content['tstamp'],
                 'cid': 'cid123',
-                'version': content['ver']
+                'version': content['ver'],
+                'name': content['name'],
+                'description': content['desc']
             }
             return True, document
         except Exception as e:
