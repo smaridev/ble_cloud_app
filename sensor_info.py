@@ -4,9 +4,16 @@ from constants import ATT_TEMP, ATT_PRESSURE
 from dal import DataAccessLayer, SensorAttrModel
 import time
 
+app_name_collection_mapping = {
+    'Thingy52': 'thingy52',
+    'lm75': 'lm75'
+}
+
 class SensorInfo(object):
-    def __init__(self, request_object):
+    def __init__(self, request_object, app_name):
         self.request = request_object
+        self.app = app_name
+        self.collection = app_name_collection_mapping[app_name]
 
     def transform(self, attr, content):
         try:
@@ -21,7 +28,7 @@ class SensorInfo(object):
 
 
     def process_document(self, document):
-        return SensorAttrModel('thingy52').add(document)
+        return SensorAttrModel(self.collection).add(document)
 
     def handle(self):
         if SensorInfoFormatValidator().validate(self.request):
@@ -56,7 +63,7 @@ class SensorInfo(object):
 
     def handle_get_request(self, args):
         try:
-            app_id = int(args['sensor'])
+            app_id = args['sensor']
             start, end = self.get_timerange(args)
             print("start: {}, end: {}, sensor_id: {}, attr {}".format(start, end, app_id, args['attr']))
             return self.get_attr_timeseries(app_id, args['attr'], start, end)
@@ -65,7 +72,7 @@ class SensorInfo(object):
             return False, None
 
     def get_attr_timeseries(self, app_id, attr, start, end):
-        docs = SensorAttrModel('thingy52').list_by_sensor(app_id, attr, start, end)
+        docs = SensorAttrModel(self.collection).list_by_sensor(int(app_id), attr, start, end)
         return docs
 
     def get_timerange(self, args):

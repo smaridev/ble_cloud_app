@@ -121,7 +121,7 @@ class LoadFormatValidator(PayloadValidator):
         return True
 
 class RegistrationLoadFormatValidator(PayloadValidator):
-    s_id = EStringIncomingType(required=True, min_len=1)
+    #s_id = EStringIncomingType(required=True, min_len=1)
     appid = EIntegerIncomingType(required=True, min_len=1)
     tstamp = ETimeStampIncomingType(required=True)
     tpid = EIntegerIncomingType(required=True, min_len=1)
@@ -139,6 +139,8 @@ class SensorInfoFormatValidator(PayloadValidator):
     load = datatypes.Function('validate_load',
                               required=True,
                               error='Invalid load specified')
+    name = EStringIncomingType(requored=False, min_len=1)
+
     strict = True
 
     def validate_load(self, load, payload, errors, **kwargs):
