@@ -139,7 +139,7 @@ class SensorInfoFormatValidator(PayloadValidator):
     load = datatypes.Function('validate_load',
                               required=True,
                               error='Invalid load specified')
-    strict = False
+    strict = True
 
     def validate_load(self, load, payload, errors, **kwargs):
         if not load:

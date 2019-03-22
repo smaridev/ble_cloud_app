@@ -31,7 +31,8 @@ class DataAccessLayer(object):
 
 
 class SensorAttrModel(DataAccessLayer):
-    def list_by_sensor(self, s_id, attr = None, start = None, end = None):
+    def list_by_sensor(self, app_id, attr = None, start = None, end = None):
+        print("APP ID {} ATTR {} ".format(app_id, attr))
         if attr is not None:
             if end == None:
                 end = time.time()
@@ -39,8 +40,8 @@ class SensorAttrModel(DataAccessLayer):
                 start = end - 3600
 
             users_ref = self.db.collection(self.collection)
-            docs = users_ref.where(u's_id', u'==', u's_1')\
-                .where(u"attribute", "==", attr).get()
+            docs = users_ref.where(u'app_id', u'==', app_id)\
+                .where(u"attribute", "==", attr).limit(20).get()
                 #.where("timestamp", ">", start).get()
               #  .where(u"timestamp", "<=", end).get()
 
@@ -48,6 +49,7 @@ class SensorAttrModel(DataAccessLayer):
             for doc in docs:
                 print(u'{} => {}'.format(doc.id, doc.to_dict()))
                 doc_dict = doc.to_dict()
+                print("response dict: {}".format(doc_dict))
                 response.append({
                     'ts': doc_dict['timestamp'],
                     'value': doc_dict['value']

@@ -56,7 +56,7 @@ class SensorInfo(object):
 
     def handle_get_request(self, args):
         try:
-            app_id = args['sensor']
+            app_id = int(args['sensor'])
             start, end = self.get_timerange(args)
             print("start: {}, end: {}, sensor_id: {}, attr {}".format(start, end, app_id, args['attr']))
             return self.get_attr_timeseries(app_id, args['attr'], start, end)

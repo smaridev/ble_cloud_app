@@ -25,16 +25,39 @@ def process_southbound_request(request_object):
 
 def process_northbound_request(request_object):
     try:
+
         req = request_object.get_json()
         args = request_object.args.to_dict()
-        print("ARGS {}".format(args))
+        
+        # Set CORS headers for the preflight request
+            # Allows GET requests from any origin with the Content-Type
+            # header and caches preflight response for an 3600s
+        headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '3600'
+        }
+
+        
         if request_object.method == 'GET':
             if args['type'] == 'sensorinfo':
-                return RegistrationInfo(req).handle_get_request(args)
+                response = RegistrationInfo(req).handle_get_request(args)
+                return (response, 200, headers)
             if args['type'] == 'sensorattrs':
-                return SensorInfo(req).handle_get_request(args)
+                response = SensorInfo(req).handle_get_request(args)
+                return (response, 200, headers)
             else:
-                return f'Invalid Request'
+                return (f'Invalid Request', 500, headers)
+        '''
+        args = {
+            'type': 'sensorattrs',
+            'sensor': 270149946891815,
+            'attr': 'humidity'
+        }
+        print("ARGS {}".format(args))
+        response = SensorInfo(request_object).handle_get_request(args)
+        '''
         return f'Invalid Request'
     except Exception as e:
         print("Exception {}".format(e))
@@ -83,6 +106,6 @@ if __name__ == '__main__':
        "s_id": "s_2"
         }
     }
-    ret = process_southbound_request(req)
-    print("return value is {}".format(ret))
+    z33ret = process_southbound_request(req)
+    #print("return value is {}".format(ret))
     ret = process_northbound_request(req)
