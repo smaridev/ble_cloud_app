@@ -18,12 +18,15 @@ class SensorInfo(object):
     def transform(self, attr, content):
         try:
             if attr in [ATT_TEMP, ATT_PRESSURE]:
-                val = content['d1'] + (content['d2']/100)
+                if 'd2' in content.keys():
+                    val = content['d1'] + (content['d2']/100)
+                else:
+                    val = content['d1']
                 return val
             else:
                 return content['d1']
         except Exception as e:
-            print("Exception e {}".format(e))
+            print("Exception e transform {}".format(e))
             return 0
 
 
@@ -58,7 +61,7 @@ class SensorInfo(object):
             }
             return True, document
         except Exception as e:
-            print("Exception e {}".format(e))
+            print("Exception e prepare_document {}".format(e))
             return False, None
 
     def handle_get_request(self, args):
@@ -68,7 +71,7 @@ class SensorInfo(object):
             print("start: {}, end: {}, sensor_id: {}, attr {}".format(start, end, app_id, args['attr']))
             return self.get_attr_timeseries(app_id, args['attr'], start, end)
         except Exception as e:
-            print("Exception e {}".format(e))
+            print("Exception e handle_get_request {}".format(e))
             return False, None
 
     def get_attr_timeseries(self, app_id, attr, start, end):

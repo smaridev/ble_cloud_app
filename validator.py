@@ -136,7 +136,7 @@ class SensorInfoFormatValidator(PayloadValidator):
     tpid = EIntegerIncomingType(required=True, min_len=1)
     appid = EIntegerIncomingType(required=True, min_len=1)
     tstamp = ETimeStampIncomingType(required=True)
-    load = datatypes.Function('validate_load',
+    data = datatypes.Function('validate_load',
                               required=True,
                               error='Invalid load specified')
     name = EStringIncomingType(requored=False, min_len=1)
